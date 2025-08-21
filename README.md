@@ -20,40 +20,42 @@ This is a ROS 2-based project for simulating, assigning, and monitoring delivery
    - It manages and assigns tasks to robots, plans paths using a map, and communicates tasks via ROS 2 topics/services.
 
 2. **Navigation Execution (Robot Navigator Node):**
-   - Robot Navigator subscribes to assigned tasks, computes and follows the path for pickup and delivery, and publishes its status.
+   - Navigation Node subscribes to assigned tasks, computes and follows the path for pickup and delivery, and updates the Robot Data.
+   - Robot Status Node subscribes to _/robot_status_ topic, and publishes and logs its status.
 
 3. **Logging & Monitoring:**
-   - All task and navigation events are published to a central logger for monitoring and debugging.
+   - Key log messages from the **_task_manager_node_, _navigation_node_**, and **_status_node_** are published to a **_central logger node_** for monitoring and debugging.
+   - All the logs from all nodes are saved in their respective _.log_ files.
    - Logs can be tailed, filtered, or exported for analysis.
 
 ---
 
 ## Repository Structure
 
-- **task_manager/**  
+- **Package**: **task_manager/**  
   - Implements the Task Manager Node for task allocation and path planning.
   - Contains ROS 2 node, service, and publisher/subscriber logic.
 
-- **robot_navigator/**  
-  - Implements the Navigation Node that executes assigned tasks and reports status.
+- **Package**: **robot_navigator/**  
+  - Implements the Navigation Node and Status Node that execute assigned tasks and publish the status.
   - Contains path execution logic, status publishing, and error handling.
 
-- **interfaces/**  
-  - Contains ROS 2 message and service definitions for task queues, navigation data, robot status, and logging.
+- **Package**: **interfaces/**  
+  - Contains ROS 2 message and service definitions for task queues (Topic Name: _/task_queue_), robot status (Topic Name: _/robot_status), logging (Topic Name: _/log), and navigation data.
 
-- **central_logger/**  
+- **Package**: **central_logger/**  
   - Publishes and aggregates logs from all nodes.
+  - Save all the logs from all nodes to a **_.log_** file.
 
-- **utils/**  
-  - Utility modules, e.g., file system helpers and path planning.
+- **Package**: **utils/**  
+  - Utility modules, e.g., file system helpers and a logger for saving logs in a file.
 
 ---
 
 ## Main Features
 
-- **Task Assignment**: Allocates delivery tasks using ROS 2 services, parses and validates task IDs, and manages a queue.
-- **Path Planning**: Computes optimal paths for pickup and delivery using a map loaded from YAML.
-- **Robot Navigation**: Executes the planned path, handles pickup/drop, and reports status back to the system.
+- **Task Assignment**: Allocates delivery tasks using ROS 2 services, parses and validates task IDs, computes optimal paths for pickup and delivery, and manages a queue.
+- **Robot Navigation and Status**: Executes the planned path, handles pickup/drop, and reports status back to the system.
 - **Centralized Logging**: All nodes publish log messages to a central logger for observability and debugging.
 - **ROS 2 Integration**: Uses ROS 2 topics and services for modular, distributed operation.
 
@@ -68,6 +70,8 @@ This is a ROS 2-based project for simulating, assigning, and monitoring delivery
 
 ### Clone the Repository
 
+Clone this repository inside the **ros2_ws/src**__ folder.
+
 ```bash
 git clone https://github.com/jnd4i-aj/delhivery_assignment.git
 cd delhivery_assignment
@@ -76,34 +80,21 @@ cd delhivery_assignment
 ### Build the Workspace
 
 ```bash
-# If using ROS 2 colcon workspace:
 colcon build
 source install/setup.bash
 ```
 
-Or, for Python-only development:
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
 ---
 
-### Run Task Manager Node
+### Run Launch file
+
+Run the launch file using the command below, which will automatically start all the nodes.
 
 ```bash
-ros2 run task_manager task_manager_node
+ros2 launch robot_navigator all_nodes_bringup.launch.py
 ```
 
-### Run Robot Navigator Node
-
-```bash
-ros2 run robot_navigator navigation_node
-```
-
-- Both nodes will communicate via ROS 2 topics/services.
+- All nodes will communicate via ROS 2 topics/services.
 - Logs will be published and can be monitored as described below.
 
 ---
@@ -116,7 +107,7 @@ ros2 run robot_navigator navigation_node
   ```bash
   ros2 service call /start_delivery interfaces/srv/AllocateTask "{task_id: 'P1D5'}"
   ```
-  - Assigns a task from pickup node 1 to drop node 5.
+  - **Assigns a task from pickup node 1 to drop node 5.**
 
 ### Monitoring & Logs
 
@@ -140,17 +131,13 @@ ros2 run robot_navigator navigation_node
 ## File Highlights
 
 - `task_manager/task_manager/task_manager_node.py`: Implements the Task Manager ROS 2 node.
-- `robot_navigator/robot_navigator/navigation_node.py`: Executes task navigation and status publishing.
+- `robot_navigator/robot_navigator/navigation_node.py`: Executes task navigation and updates robot data.
+- `robot_navigator/robot_navigator/status_node.py`: Receives the Robot's current Status, then publishes and logs it..
 - `interfaces/msg/` and `interfaces/srv/`: Custom message and service definitions for inter-node communication.
-- `central_logger/log_publisher.py`: Publishes logs from all nodes.
+- `central_logger/log_publisher.py`: Receives logs from all nodes by subscribing to topic _/log_ and saves to a _.log_ file.
 
 ---
 
-## License
-
-This project currently does not specify a license. If you plan to use it beyond personal or academic purposes, please clarify with the repository owner.
-
----
 
 ## Author
 
@@ -158,5 +145,3 @@ Name: AMAN JINDAL
 GitHub: [jnd4i-aj](https://github.com/jnd4i-aj)
 
 ---
-
-Would you like this README.md written directly to your repository? Or do you want further details on any section (e.g., specific message/service types, example logs, or advanced usage)?
