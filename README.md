@@ -33,7 +33,7 @@ This is a ROS 2-based project for simulating, assigning, and monitoring delivery
 ## Repository Structure
 
 - **Package**: **task_manager/**  
-  - Implements the Task Manager Node for task allocation and path planning.
+  - Implements the Task Manager Node for task allocation and path planning using the **_`path_planning`_** Package.
   - Contains ROS 2 node, service, and publisher/subscriber logic.
 
 - **Package**: **robot_navigator/**  
@@ -50,6 +50,11 @@ This is a ROS 2-based project for simulating, assigning, and monitoring delivery
 - **Package**: **utils/**  
   - Utility modules, e.g., file system helpers and a logger for saving logs in a file.
 
+- **Folder**: **config/**  
+  - Config folder, which keeps all the config(.yaml) files like Map, Robot Parameters, and Log Codes.
+
+- **Package**: **path_planning/**  
+  - Contains the algorithm to compute the optimal path from **_Start_** to the **_Goal_** location.
 ---
 
 ## Main Features
