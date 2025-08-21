@@ -21,6 +21,7 @@ class StatusNode(Node):
         try:
             current_status = msg.status
             self.get_logger().info(f"Current Robot Status is {current_status}")
+            self.log_pub.publish(1, "I-311", bot_id)
         except Exception:
             self.log_pub.publish(3, "E-301", bot_id)
             self.get_logger().warning("Failed to get Data from Nav")

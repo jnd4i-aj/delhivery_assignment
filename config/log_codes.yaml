@@ -30,6 +30,7 @@ I-213: "TargetPose published"
 I-220: "Assigning task from queue (robot idle)"
 E-230: "TaskManager unexpected exception"
 I-300: "StatusNode started"
+I-311: "Robot Current Status Published"
 E-301: "Failed to parse NavData"
 E-302: "Failed to publish RobotStatus"
 
