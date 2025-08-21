@@ -1,0 +1,3 @@
+string task_id
+uint16 pickup_node
+uint16 drop_node

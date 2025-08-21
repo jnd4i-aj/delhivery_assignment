@@ -1,0 +1,2 @@
+uint8 bot_id
+string robot_status

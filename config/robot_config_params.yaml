@@ -1,0 +1,7 @@
+Navigation_node:
+  ros__parameters:
+    robot_id: 1
+    start_node: 1
+    step_duration: 1.0
+    pickup_dwell: 3.0
+    status_publish_period: 1.0
