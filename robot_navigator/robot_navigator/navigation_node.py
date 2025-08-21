@@ -69,12 +69,12 @@ class NavigationNode(Node):
         self.get_logger().info("Navigation Node ready and publishing status periodically.")
         self._safe_log(L.INFO,  "I-100", self.robot_id)
 
-    def _safe_publish(self, pub, msg):
-        try:
-            if rclpy.ok() and not self._stop_event.is_set():
-                pub.publish(msg)
-        except Exception as e:
-            self.get_logger().debug(f"safe_publish suppressed: {e}")
+    def _safe_log(self, level, code, robot_id):
+        if not self._stop_event.is_set() and rclpy.ok():
+            try:
+                self.log_pub.publish(level, code, robot_id)
+            except Exception as e:
+                self.get_logger().error(f"Safe log failed: {e}")
 
     def _sleep_with_cancel(self, seconds: float):
         end = time.time() + seconds
@@ -152,13 +152,6 @@ class NavigationNode(Node):
         self._worker_thread.start()
         self.get_logger().info(f"Started execution worker for task {task_snapshot}")
         self._safe_log(L.INFO,  "I-125", self.robot_id)
-
-    def _safe_log(self, level, code, robot_id):
-        if not self._stop_event.is_set() and rclpy.ok():
-            try:
-                self._safe_log(level, code, robot_id)
-            except Exception:
-                pass
 
     def _execute_task_worker(self, task_snapshot: str):
         try:
