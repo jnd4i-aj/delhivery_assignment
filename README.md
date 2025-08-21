@@ -109,22 +109,93 @@ ros2 launch robot_navigator all_nodes_bringup.launch.py
   ```
   - **Assigns a task from pickup node 1 to drop node 5.**
 
-### Monitoring & Logs
+### Monitoring & Observability
 
-- **Tail All Logs**
+#### 1. Observe ROS2 Topics
+
+- **List all active topics:**
   ```bash
-  tail -f logs/app.log
+  ros2 topic list
+  ```
+- **Inspect messages on a topic:**
+  ```bash
+  ros2 topic echo /topic_name
+  ```
+- **Get detailed info about a topic:**
+  ```bash
+  ros2 topic info /topic_name
+  ```
+  - **To see the data published on the /task_queue topic:**
+  ```bash
+  ros2 topic echo /task_queue
+  ```
+  - **To see the data published on the /robot_status topic:**
+  ```bash
+  ros2 topic echo /robot_status
+  ```
+  - **To see the data published on the /nav_data topic:**
+  ```bash
+  ros2 topic echo /nav_data
+  ```
+  - **To see the data published on the /log topic:**
+  ```bash
+  ros2 topic echo /log
+  ```
+  - **To see the data published on the /target_pose topic:**
+  ```bash
+  ros2 topic echo /target_pose
   ```
 
-- **Show Only Errors**
+#### 2. List Services & Nodes
+
+- **List all active nodes:**
   ```bash
-  grep ERROR logs/app.log
+  ros2 node list
+  ```
+- **List all available services:**
+  ```bash
+  ros2 service list
+  ```
+- **Get info about a node:**
+  ```bash
+  ros2 node info /node_name
   ```
 
-- **Export Logs**
+#### 3. Interfaces
+
+- **Show definition of the message:**
+- 1. For Task Queue
   ```bash
-  cp logs/app.log exported_logs.txt
+  ros2 interface show interfaces/msg/TaskQueue
   ```
+- 2. For Robot Status
+  ```bash
+  ros2 interface show interfaces/msg/RobotStatus
+  ```
+- 3. For All Logs
+  ```bash
+  ros2 interface show interfaces/msg/AllLogs
+  ```
+- 2. For Nav Data
+  ```bash
+  ros2 interface show interfaces/msg/NavData
+  ```
+- 2. For Target Pose
+  ```bash
+  ros2 interface show interfaces/msg/TargetPose
+  ```
+
+- **Show definition of the Start Delivery Service:**
+  ```bash
+  ros2 interface show interfaces/srv/AllocateTask
+  ```
+
+---
+### Logs
+
+- Logs are stored in the home directory of the computer, in the `service_logs` folder.
+- Inside the `service_logs` folder, there will be a folder with the name `<todays_date>_all_logs`.
+- Inside the `<todays_date>_all_logs` folder, there will be `.log` files with the name `<node_name>.log`
 
 ---
 
