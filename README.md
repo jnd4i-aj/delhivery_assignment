@@ -1,136 +1,155 @@
-To create an effective README for your repository, I'll draft a structured template covering:
+## **Project:** **Delhivery Assignment**
 
-- Architecture Overview  
-- Build & Run Instructions  
-- CLI Commands for Tasks  
-- Log Monitoring Instructions  
+## Overview
 
-Please adjust any placeholders as needed to match your implementation.
+This is a ROS 2-based project for simulating, assigning, and monitoring delivery tasks using distributed task manager and navigation nodes. The repository includes robot navigation, task allocation, and central logging to facilitate research and development in multi-robot or automated delivery workflows.
 
 ---
 
-# delhivery_assignment
+## Workflow
 
-## Architecture Overview
+1. **Task Assignment (Task Manager Node):**
+   - The Task Manager receives new delivery tasks (pickup and drop nodes).
+   - It manages and assigns tasks to robots, plans paths using a map, and communicates tasks via ROS 2 topics/services.
 
-This project is primarily written in **Python** (99.1%), with some **CMake** (0.9%).  
-It is structured to accomplish <provide a brief, one-sentence summary of the project's purpose, e.g., "automated package tracking and task handling for delivery services">.
+2. **Navigation Execution (Robot Navigator Node):**
+   - Robot Navigator subscribes to assigned tasks, computes and follows the path for pickup and delivery, and publishes its status.
 
-### Project Structure
-```
-delhivery_assignment/
-├── src/               # Main source code
-│   ├── main.py        # Entry point
-│   ├── tasks.py       # Task management
-│   ├── monitor.py     # Log monitoring
-│   └── ...            # Additional modules
-├── tests/             # Test suite
-├── requirements.txt   # Python dependencies
-├── CMakeLists.txt     # CMake configuration (if needed)
-└── README.md          # Project documentation
-```
-
-### Components
-
-- **Task Handler**: Manages and executes delivery-related tasks.
-- **CLI Interface**: Provides command-line access to core functionality.
-- **Monitoring Module**: Captures and outputs logs for observability.
-- **Configuration**: Settings via environment variables or config files.
+3. **Logging & Monitoring:**
+   - All task and navigation events are published to a central logger for monitoring and debugging.
+   - Logs can be tailed, filtered, or exported for analysis.
 
 ---
 
-## Build & Run Instructions
+## Repository Structure
 
-### Prerequisites
+- **task_manager/**  
+  - Implements the Task Manager Node for task allocation and path planning.
+  - Contains ROS 2 node, service, and publisher/subscriber logic.
 
-- Python 3.8+  
-- (Optional) CMake if building native extensions
+- **robot_navigator/**  
+  - Implements the Navigation Node that executes assigned tasks and reports status.
+  - Contains path execution logic, status publishing, and error handling.
 
-### Installation
+- **interfaces/**  
+  - Contains ROS 2 message and service definitions for task queues, navigation data, robot status, and logging.
+
+- **central_logger/**  
+  - Publishes and aggregates logs from all nodes.
+
+- **utils/**  
+  - Utility modules, e.g., file system helpers and path planning.
+
+---
+
+## Main Features
+
+- **Task Assignment**: Allocates delivery tasks using ROS 2 services, parses and validates task IDs, and manages a queue.
+- **Path Planning**: Computes optimal paths for pickup and delivery using a map loaded from YAML.
+- **Robot Navigation**: Executes the planned path, handles pickup/drop, and reports status back to the system.
+- **Centralized Logging**: All nodes publish log messages to a central logger for observability and debugging.
+- **ROS 2 Integration**: Uses ROS 2 topics and services for modular, distributed operation.
+
+---
+
+## Getting Started
+
+> **Prerequisites:**  
+> - ROS 2 (Foxy or later recommended)  
+> - Python 3.8+  
+> - (Optional) CMake for building custom interface messages
+
+### Clone the Repository
 
 ```bash
 git clone https://github.com/jnd4i-aj/delhivery_assignment.git
 cd delhivery_assignment
+```
+
+### Build the Workspace
+
+```bash
+# If using ROS 2 colcon workspace:
+colcon build
+source install/setup.bash
+```
+
+Or, for Python-only development:
+
+```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Running the Application
+---
+
+### Run Task Manager Node
 
 ```bash
-python src/main.py
+ros2 run task_manager task_manager_node
 ```
 
-Or, if a CLI interface is present:
+### Run Robot Navigator Node
 
 ```bash
-python src/main.py [COMMAND] [OPTIONS]
+ros2 run robot_navigator navigation_node
 ```
+
+- Both nodes will communicate via ROS 2 topics/services.
+- Logs will be published and can be monitored as described below.
 
 ---
 
 ## CLI Commands
 
-Assuming `main.py` exposes commands via argparse/click/typer:
-
 ### Task Management
 
-- **List Tasks**
+- **Start Delivery Task (via service call):**
   ```bash
-  python src/main.py list-tasks
+  ros2 service call /start_delivery interfaces/srv/AllocateTask "{task_id: 'P1D5'}"
   ```
-- **Add a Task**
-  ```bash
-  python src/main.py add-task --name "Deliver package" --priority high
-  ```
-- **Complete a Task**
-  ```bash
-  python src/main.py complete-task --id 42
-  ```
+  - Assigns a task from pickup node 1 to drop node 5.
 
 ### Monitoring & Logs
 
-- **Tail Logs**
-  ```bash
-  python src/monitor.py --tail
-  ```
-- **Show Errors Only**
-  ```bash
-  python src/monitor.py --level error
-  ```
-- **Export Logs**
-  ```bash
-  python src/monitor.py --export logs.txt
-  ```
-
----
-
-## Monitoring Logs
-
-Logs are generated in `logs/` or output to console by default.
-
-- To view logs in real-time:
+- **Tail All Logs**
   ```bash
   tail -f logs/app.log
   ```
-- To filter logs:
+
+- **Show Only Errors**
   ```bash
   grep ERROR logs/app.log
   ```
 
-If using the built-in monitor:
-```bash
-python src/monitor.py --tail
-```
+- **Export Logs**
+  ```bash
+  cp logs/app.log exported_logs.txt
+  ```
 
 ---
 
-## Notes
+## File Highlights
 
-- Adjust CLI commands to match actual command signatures in your implementation.
-- Refer to source code for available options and further customization.
+- `task_manager/task_manager/task_manager_node.py`: Implements the Task Manager ROS 2 node.
+- `robot_navigator/robot_navigator/navigation_node.py`: Executes task navigation and status publishing.
+- `interfaces/msg/` and `interfaces/srv/`: Custom message and service definitions for inter-node communication.
+- `central_logger/log_publisher.py`: Publishes logs from all nodes.
 
 ---
 
-Let me know if you'd like this saved directly to your repository as a README.md file, or if you need any section expanded or customized!
+## License
+
+This project currently does not specify a license. If you plan to use it beyond personal or academic purposes, please clarify with the repository owner.
+
+---
+
+## Author
+
+Name: AMAN JINDAL  
+GitHub: [jnd4i-aj](https://github.com/jnd4i-aj)
+
+---
+
+Would you like this README.md written directly to your repository? Or do you want further details on any section (e.g., specific message/service types, example logs, or advanced usage)?
