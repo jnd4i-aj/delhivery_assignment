@@ -11,7 +11,7 @@ class FileSysUtility:
 
     @staticmethod
     def trajectory_map_path():
-        return join(FileSysUtility.home_dir_path(), "ros2_ws", "src", "task_delhivery", "config", "trajectory_map.yaml")
+        return join(FileSysUtility.home_dir_path(), "ros2_ws", "src", "delhivery_assignment", "config", "trajectory_map.yaml")
 
     @staticmethod
     def log_path():
@@ -19,4 +19,4 @@ class FileSysUtility:
 
     @staticmethod
     def log_code_file_path():
-        return join(FileSysUtility.home_dir_path(), "ros2_ws", "src", "task_delhivery", "config", "log_codes.yaml")
+        return join(FileSysUtility.home_dir_path(), "ros2_ws", "src", "delhivery_assignment", "config", "log_codes.yaml")

@@ -6,7 +6,8 @@ from os.path import join, expanduser
 def generate_launch_description():
 
     nav_config = join(
-        expanduser("~"), "ros2_ws", "src", "task_delhivery", "config", "robot_config_params.yaml"
+        expanduser(
+            "~"), "ros2_ws", "src", "delhivery_assignment", "config", "robot_config_params.yaml"
     )
 
     ld = LaunchDescription()
