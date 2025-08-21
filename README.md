@@ -1,5 +1,12 @@
 ## **Project:** **Delhivery Assignment**
 
+## Problem Statement
+
+Design a ROS-based architecture simulating an autonomous warehouse robot system. The focus is on
+proper ROS communication, modularity, and system observability through logging and publishing logs as
+messages for monitoring purposes.
+
+
 ## Overview
 
 This is a ROS 2-based project for simulating, assigning, and monitoring delivery tasks using distributed task manager and navigation nodes. The repository includes robot navigation, task allocation, and central logging to facilitate research and development in multi-robot or automated delivery workflows.
