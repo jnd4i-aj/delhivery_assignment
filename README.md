@@ -79,7 +79,7 @@ Clone this repository inside the **_ros2_ws/src_** folder.
 
 ```bash
 git clone https://github.com/jnd4i-aj/delhivery_assignment.git
-cd delhivery_assignment
+cd ..
 ```
 
 ### Build the Workspace
